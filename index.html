@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Top Task</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>My Priority Task</h1>
+        
+        <div id="main-task-section">
+            <div id="task-input-section">
+                <input type="text" id="main-task-input" placeholder="Enter your top priority task">
+                <button id="submit-main-task">Set Task</button>
+            </div>
+            
+            <div id="main-task-display" class="hidden">
+                <div class="task-card">
+                    <input type="checkbox" id="main-task-checkbox">
+                    <span id="main-task-text"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="additional-tasks-section" class="hidden">
+            <h2>Additional Tasks</h2>
+            <div id="additional-task-input">
+                <input type="text" id="additional-task-input-field" placeholder="Enter additional task">
+                <button id="submit-additional-task">Add Task</button>
+            </div>
+            <div id="additional-tasks-list"></div>
+        </div>
+    </div>
+
+    <!-- Celebration Modal -->
+    <div id="celebration-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>🎉 Congratulations! 🎉</h2>
+            <p>You've completed all your top tasks for the day!</p>
+            <button id="celebration-button">Start Fresh Tomorrow</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
