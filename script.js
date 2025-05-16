@@ -167,4 +167,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateSummary();
+
+    // --- Cute snail animation ---
+    const snail = document.getElementById('snail');
+    let sx = 0;
+    let sy = 0;
+    let vx = 2; // starting movement to the right
+    let vy = 0;
+    const snailSpeed = 2; // pixels per frame
+
+    function moveSnail() {
+        const snailWidth = snail.offsetWidth;
+        const snailHeight = snail.offsetHeight;
+        const maxX = window.innerWidth - snailWidth;
+        const maxY = window.innerHeight - snailHeight;
+
+        sx += vx;
+        sy += vy;
+
+        if (vx > 0 && sx >= maxX) {
+            sx = maxX;
+            vx = 0;
+            vy = snailSpeed;
+        } else if (vy > 0 && sy >= maxY) {
+            sy = maxY;
+            vx = -snailSpeed;
+            vy = 0;
+        } else if (vx < 0 && sx <= 0) {
+            sx = 0;
+            vx = 0;
+            vy = -snailSpeed;
+        } else if (vy < 0 && sy <= 0) {
+            sy = 0;
+            vx = snailSpeed;
+            vy = 0;
+        }
+
+        snail.style.transform = `translate(${sx}px, ${sy}px)`;
+
+        const slime = document.createElement('div');
+        slime.className = 'slime';
+        slime.style.left = (sx + snailWidth / 2) + 'px';
+        slime.style.top = (sy + snailHeight / 2) + 'px';
+        document.body.appendChild(slime);
+        setTimeout(() => slime.remove(), 2000);
+
+        requestAnimationFrame(moveSnail);
+    }
+
+    requestAnimationFrame(moveSnail);
 });
