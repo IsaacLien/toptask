@@ -22,6 +22,12 @@ h1 {
     margin-bottom: 2rem;
 }
 
+.summary {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
 input[type="text"] {
     width: 100%;
     padding: 0.8rem;

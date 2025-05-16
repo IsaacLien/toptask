@@ -11,6 +11,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const additionalTasksList = document.getElementById('additional-tasks-list');
     const celebrationModal = document.getElementById('celebration-modal');
     const celebrationButton = document.getElementById('celebration-button');
+    const summary = document.getElementById('summary');
+
+    function updateSummary() {
+        const tasks = [];
+        const mainTask = mainTaskText.textContent.trim();
+        if (mainTask) tasks.push(mainTask);
+        const additionalSpans = additionalTasksList.querySelectorAll('span');
+        additionalSpans.forEach(span => tasks.push(span.textContent.trim()));
+
+        const today = new Date().toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        if (tasks.length === 0) {
+            summary.textContent = `Today's date is ${today}.`;
+        } else if (tasks.length === 1) {
+            summary.textContent = `Today's date is ${today}. My top task is ${tasks[0]}.`;
+        } else {
+            summary.textContent = `Today's date is ${today}. My top tasks are ${tasks.join(', ')}.`;
+        }
+    }
 
     function submitMainTaskHandler() {
         const task = mainTaskInput.value.trim();
@@ -18,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mainTaskText.textContent = task;
             taskInputSection.classList.add('hidden');
             mainTaskDisplay.classList.remove('hidden');
+            updateSummary();
         }
     }
 
@@ -27,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const taskElement = createTaskElement(task);
             additionalTasksList.appendChild(taskElement);
             additionalTaskInput.value = '';
+            updateSummary();
             
             // Limit to 3 additional tasks
             if (additionalTasksList.children.length >= 3) {
@@ -137,7 +162,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         taskCard.appendChild(checkbox);
         taskCard.appendChild(text);
-        
+
         return taskCard;
     }
-}); 
+
+    updateSummary();
+});
