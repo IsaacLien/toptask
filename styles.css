@@ -149,6 +149,33 @@ h2 {
     box-shadow: 0 0 5px #08f, 0 0 10px #08f;
 }
 
+/* Pixelated snail and slime trail */
+#snail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-size: 24px;
+    pointer-events: none;
+    z-index: 2000;
+    filter: drop-shadow(0 0 2px #0ff);
+}
+
+.slime {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: rgba(0, 255, 255, 0.6);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100;
+    animation: slimeFade 2s linear forwards;
+}
+
+@keyframes slimeFade {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
 @media (max-width: 480px) {
     .container {
         margin: 1rem;
