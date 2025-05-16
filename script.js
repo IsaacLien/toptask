@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
     const mainTaskInput = document.getElementById('main-task-input');
     const submitMainTask = document.getElementById('submit-main-task');
     const mainTaskDisplay = document.getElementById('main-task-display');
@@ -166,5 +166,93 @@ document.addEventListener('DOMContentLoaded', () => {
         return taskCard;
     }
 
+    // ---------------- Flappy Bird Game -----------------
+    const flappyCanvas = document.getElementById('flappy-canvas');
+    const flappyStart = document.getElementById('flappy-start');
+
+    const fctx = flappyCanvas.getContext('2d');
+    let bird, pipes, frameCount, playing;
+
+    function resetFlappy() {
+        bird = { x: 50, y: flappyCanvas.height / 2, width: 20, height: 20, velocity: 0 };
+        pipes = [];
+        frameCount = 0;
+        playing = true;
+        fctx.clearRect(0, 0, flappyCanvas.width, flappyCanvas.height);
+        flappyStart.classList.add('hidden');
+        requestAnimationFrame(updateFlappy);
+    }
+
+    function addPipe() {
+        const gap = 120;
+        const minHeight = 40;
+        const maxHeight = flappyCanvas.height - gap - minHeight;
+        const top = Math.floor(Math.random() * (maxHeight - minHeight)) + minHeight;
+        pipes.push({ x: flappyCanvas.width, top });
+    }
+
+    function drawFlappy() {
+        fctx.clearRect(0, 0, flappyCanvas.width, flappyCanvas.height);
+        // Draw bird
+        fctx.fillStyle = '#f0f';
+        fctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+        // Draw pipes
+        fctx.fillStyle = '#0f0';
+        pipes.forEach(p => {
+            fctx.fillRect(p.x, 0, 40, p.top);
+            fctx.fillRect(p.x, p.top + 120, 40, flappyCanvas.height - p.top - 120);
+        });
+    }
+
+    function checkCollision() {
+        if (bird.y < 0 || bird.y + bird.height > flappyCanvas.height) return true;
+        for (const p of pipes) {
+            if (bird.x + bird.width > p.x && bird.x < p.x + 40) {
+                if (bird.y < p.top || bird.y + bird.height > p.top + 120) return true;
+            }
+        }
+        return false;
+    }
+
+    function updateFlappy() {
+        if (!playing) return;
+        frameCount++;
+        bird.velocity += 0.6;
+        bird.y += bird.velocity;
+
+        if (frameCount % 90 === 0) addPipe();
+        pipes.forEach(p => p.x -= 2);
+        pipes = pipes.filter(p => p.x + 40 > 0);
+
+        if (checkCollision()) {
+            playing = false;
+            flappyStart.classList.remove('hidden');
+            return;
+        }
+
+        drawFlappy();
+        requestAnimationFrame(updateFlappy);
+    }
+
+    function flap() {
+        if (!playing) return;
+        bird.velocity = -8;
+    }
+
+    flappyStart.addEventListener('click', resetFlappy);
+    flappyCanvas.addEventListener('click', flap);
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+            e.preventDefault();
+            flap();
+        }
+    });
+
     updateSummary();
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
