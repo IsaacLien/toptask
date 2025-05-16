@@ -13,6 +13,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const celebrationButton = document.getElementById('celebration-button');
     const summary = document.getElementById('summary');
 
+    function triggerLaserOverlay() {
+        const overlay = document.createElement('div');
+        overlay.className = 'laser-overlay';
+        document.body.appendChild(overlay);
+        setTimeout(() => overlay.remove(), 2000);
+    }
+
+    function triggerCrazyAnimation() {
+        confetti({
+            particleCount: 150,
+            spread: 100,
+            origin: { y: 0.6 }
+        });
+        triggerLaserOverlay();
+    }
+
     function updateSummary() {
         const tasks = [];
         const mainTask = mainTaskText.textContent.trim();
@@ -76,6 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const animationEnd = Date.now() + duration;
         const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
+        triggerLaserOverlay();
+
         function randomInRange(min, max) {
             return Math.random() * (max - min) + min;
         }
@@ -126,14 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     mainTaskCheckbox.addEventListener('change', () => {
         if (mainTaskCheckbox.checked) {
-            // Trigger confetti animation
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
-
-            // Show additional tasks section
+            triggerCrazyAnimation();
             additionalTasksSection.classList.remove('hidden');
         }
     });
@@ -152,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Add change listener to check if all tasks are complete
         checkbox.addEventListener('change', () => {
+            triggerCrazyAnimation();
             if (checkAllTasksComplete()) {
                 triggerFinalCelebration();
             }
