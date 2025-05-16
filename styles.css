@@ -160,3 +160,32 @@ h2 {
         padding: 1.5rem;
     }
 }
+
+/* Flappy Bird styles */
+#flappy-container {
+    max-width: 320px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+#flappy-canvas {
+    display: block;
+    margin: 0 auto 1rem auto;
+    background: #000;
+    border: 2px solid #08f;
+}
+
+#flappy-start {
+    background-color: transparent;
+    color: #0ff;
+    border: 2px solid #08f;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#flappy-start:hover {
+    background-color: rgba(0,0,0,0.6);
+    box-shadow: 0 0 5px #08f, 0 0 10px #08f;
+}
