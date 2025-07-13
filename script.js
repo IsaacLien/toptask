@@ -1,4 +1,45 @@
 document.addEventListener('DOMContentLoaded', () => {
+    class MusicManager {
+        constructor() {
+            this.tracks = {};
+            this.current = null;
+        }
+
+        addTrack(name, src) {
+            const audio = new Audio(src);
+            audio.loop = true;
+            this.tracks[name] = audio;
+        }
+
+        play(name) {
+            const track = this.tracks[name];
+            if (!track) return;
+            if (this.current && this.current !== track) {
+                this.current.pause();
+                this.current.currentTime = 0;
+            }
+            this.current = track;
+            track.play().catch(() => {});
+        }
+
+        stop() {
+            if (this.current) {
+                this.current.pause();
+                this.current.currentTime = 0;
+                this.current = null;
+            }
+        }
+    }
+
+    const musicManager = new MusicManager();
+    musicManager.addTrack('main', 'assets/music/main_theme.mp3');
+
+    function enableMusic() {
+        musicManager.play('main');
+    }
+
+    // Autoplay restrictions require a user gesture
+    window.addEventListener('click', enableMusic, { once: true });
     const mainTaskInput = document.getElementById('main-task-input');
     const submitMainTask = document.getElementById('submit-main-task');
     const mainTaskDisplay = document.getElementById('main-task-display');
