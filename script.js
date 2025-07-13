@@ -13,6 +13,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const celebrationButton = document.getElementById('celebration-button');
     const summary = document.getElementById('summary');
 
+    // Tab and loading elements
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const shipPage = document.getElementById('ship-page');
+    const animationsPage = document.getElementById('animations-page');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const shipImage = document.getElementById('ship-image');
+    const shipBg = document.querySelector('.ship-background');
+
+    const shipLocations = [
+        {
+            background: 'https://via.placeholder.com/800x300?text=Space+Background',
+            ship: 'https://via.placeholder.com/200x150?text=Ship'
+        },
+        {
+            background: 'https://via.placeholder.com/800x300?text=Island+Background',
+            ship: 'https://via.placeholder.com/200x150?text=Pirate+Ship'
+        }
+    ];
+    let currentLocation = 0;
+    const loadedLocations = {};
+
+    function preloadAssets(assets) {
+        const urls = Object.values(assets);
+        return Promise.all(urls.map(url => new Promise(resolve => {
+            const img = new Image();
+            img.src = url;
+            img.onload = resolve;
+        })));
+    }
+
+    function initShipPage(index = currentLocation) {
+        const assets = shipLocations[index];
+        shipImage.src = assets.ship;
+        shipBg.style.backgroundImage = `url(${assets.background})`;
+        shipImage.classList.add('visible');
+        shipBg.classList.add('visible');
+    }
+
+    function showTab(tab) {
+        shipPage.classList.add('hidden');
+        animationsPage.classList.add('hidden');
+        if (tab === 'ship') {
+            shipPage.classList.remove('hidden');
+        } else {
+            animationsPage.classList.remove('hidden');
+        }
+        tabButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tab);
+        });
+    }
+
     function triggerLaserOverlay() {
         const overlay = document.createElement('div');
         overlay.className = 'laser-overlay';
@@ -258,6 +309,39 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             flap();
         }
+    });
+
+    // Preload ship assets on initial load
+    loadingOverlay.classList.remove('hidden');
+    preloadAssets(shipLocations[currentLocation]).then(() => {
+        loadedLocations[currentLocation] = true;
+        initShipPage(currentLocation);
+        loadingOverlay.classList.add('hidden');
+        showTab('ship');
+    });
+
+    document.getElementById('set-sail').addEventListener('click', () => {
+        const nextIndex = (currentLocation + 1) % shipLocations.length;
+        shipImage.classList.remove('visible');
+        shipBg.classList.remove('visible');
+        if (loadedLocations[nextIndex]) {
+            currentLocation = nextIndex;
+            initShipPage(nextIndex);
+        } else {
+            loadingOverlay.classList.remove('hidden');
+            preloadAssets(shipLocations[nextIndex]).then(() => {
+                loadedLocations[nextIndex] = true;
+                currentLocation = nextIndex;
+                initShipPage(nextIndex);
+                loadingOverlay.classList.add('hidden');
+            });
+        }
+    });
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            showTab(btn.dataset.tab);
+        });
     });
 
     updateSummary();

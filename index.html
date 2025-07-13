@@ -9,6 +9,15 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
+    <div id="tab-nav">
+        <button class="tab-button active" data-tab="ship">Ship</button>
+        <button class="tab-button" data-tab="animations">Animations</button>
+    </div>
+
+    <div id="loading-overlay" class="hidden">
+        <div class="spinner"></div>
+    </div>
+
     <div class="container">
         <h1>My Priority Task</h1>
         <p id="summary" class="summary"></p>
@@ -41,6 +50,19 @@
         <h2>Take a Break: Flappy Bird</h2>
         <canvas id="flappy-canvas" width="320" height="480"></canvas>
         <button id="flappy-start">Start Game</button>
+    </div>
+
+    <div id="ship-page" class="tab-page">
+        <div class="ship-background">
+            <img id="ship-image" alt="Ship">
+        </div>
+        <div class="ship-controls">
+            <button id="set-sail">Set Sail</button>
+        </div>
+    </div>
+
+    <div id="animations-page" class="tab-page hidden">
+        <p>Animations go here.</p>
     </div>
 
     <!-- Celebration Modal -->
