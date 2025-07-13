@@ -13,6 +13,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const celebrationButton = document.getElementById('celebration-button');
     const summary = document.getElementById('summary');
 
+    // Tab and loading elements
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const shipPage = document.getElementById('ship-page');
+    const animationsPage = document.getElementById('animations-page');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const shipImage = document.getElementById('ship-image');
+    const shipBg = document.querySelector('.ship-background');
+
+    const shipAssets = {
+        background: 'https://via.placeholder.com/800x300?text=Space+Background',
+        ship: 'https://via.placeholder.com/200x150?text=Ship'
+    };
+    let shipLoaded = false;
+
+    function preloadShip() {
+        const urls = Object.values(shipAssets);
+        return Promise.all(urls.map(url => new Promise(resolve => {
+            const img = new Image();
+            img.src = url;
+            img.onload = resolve;
+        })));
+    }
+
+    function initShipPage() {
+        shipImage.src = shipAssets.ship;
+        shipBg.style.backgroundImage = `url(${shipAssets.background})`;
+    }
+
+    function showTab(tab) {
+        shipPage.classList.add('hidden');
+        animationsPage.classList.add('hidden');
+        if (tab === 'ship') {
+            shipPage.classList.remove('hidden');
+        } else {
+            animationsPage.classList.remove('hidden');
+        }
+        tabButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tab);
+        });
+    }
+
     function triggerLaserOverlay() {
         const overlay = document.createElement('div');
         overlay.className = 'laser-overlay';
@@ -258,6 +299,32 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             flap();
         }
+    });
+
+    // Preload ship assets on initial load
+    loadingOverlay.classList.remove('hidden');
+    preloadShip().then(() => {
+        initShipPage();
+        shipLoaded = true;
+        loadingOverlay.classList.add('hidden');
+        showTab('ship');
+    });
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tab = btn.dataset.tab;
+            if (tab === 'ship' && !shipLoaded) {
+                loadingOverlay.classList.remove('hidden');
+                preloadShip().then(() => {
+                    initShipPage();
+                    shipLoaded = true;
+                    loadingOverlay.classList.add('hidden');
+                    showTab('ship');
+                });
+            } else {
+                showTab(tab);
+            }
+        });
     });
 
     updateSummary();
